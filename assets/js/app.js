@@ -43,6 +43,7 @@ const els = {
   loginError: document.getElementById('loginError'),
   activeAccessCode: document.getElementById('activeAccessCode'),
   menuButton: document.getElementById('menuButton'),
+  portalBody: document.querySelector('.portal-body'),
   sidebar: document.getElementById('cabinetSidebar'),
   headerLogout: document.getElementById('headerLogout'),
   sidebarLogout: document.getElementById('sidebarLogout'),
@@ -50,7 +51,6 @@ const els = {
   profileBalance: document.getElementById('profileBalance'),
   profileSaldo: document.getElementById('profileSaldo'),
   profileRemainder: document.getElementById('profileRemainder'),
-  profileNotice: document.getElementById('profileNotice'),
   eptsForm: document.getElementById('eptsForm'),
   eptsCode: document.getElementById('eptsCode'),
   eptsError: document.getElementById('eptsError'),
@@ -152,7 +152,6 @@ function renderCabinet() {
   els.profileBalance.textContent = profile.balance
   els.profileSaldo.textContent = profile.saldo
   els.profileRemainder.textContent = profile.remainder
-  els.profileNotice.textContent = profile.notice
 
   els.eptsCode.value = ''
   els.eptsError.textContent = ''
@@ -160,7 +159,11 @@ function renderCabinet() {
   els.trackingError.textContent = ''
   renderTrackingEmpty()
   setActiveNav('home')
-  closeSidebar()
+  if (window.matchMedia('(max-width: 820px)').matches) {
+    closeSidebar()
+  } else {
+    openSidebar()
+  }
   closeProductModal()
 
   els.app.className = 'broker-frame dashboard-page'
@@ -386,6 +389,7 @@ function setActiveNav(section) {
 function toggleSidebar() {
   const nextState = !els.sidebar.classList.contains('open')
   els.sidebar.classList.toggle('open', nextState)
+  els.portalBody.classList.toggle('sidebar-open', nextState)
   els.menuButton.setAttribute('aria-expanded', String(nextState))
   els.menuButton.setAttribute(
     'aria-label',
@@ -393,8 +397,16 @@ function toggleSidebar() {
   )
 }
 
+function openSidebar() {
+  els.sidebar.classList.add('open')
+  els.portalBody.classList.add('sidebar-open')
+  els.menuButton.setAttribute('aria-expanded', 'true')
+  els.menuButton.setAttribute('aria-label', 'Закрыть навигацию')
+}
+
 function closeSidebar() {
   els.sidebar.classList.remove('open')
+  els.portalBody.classList.remove('sidebar-open')
   els.menuButton.setAttribute('aria-expanded', 'false')
   els.menuButton.setAttribute('aria-label', 'Открыть навигацию')
 }

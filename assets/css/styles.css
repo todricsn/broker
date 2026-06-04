@@ -343,15 +343,26 @@ button {
   height: calc(100vh - 67px);
   min-height: 693px;
   display: grid;
+  grid-template-columns: 0 minmax(0, 1fr);
+  transition: grid-template-columns 180ms ease;
+}
+
+.portal-body.sidebar-open {
   grid-template-columns: 196px minmax(0, 1fr);
 }
 
 .sidebar {
   position: relative;
+  min-width: 0;
+  overflow: hidden;
   color: #fff;
   background:
     linear-gradient(180deg, rgba(0, 37, 65, 0.92), rgba(0, 29, 51, 0.98)),
     url('../customs-dark-bg.png') center / cover no-repeat;
+}
+
+.sidebar:not(.open) {
+  pointer-events: none;
 }
 
 .sidebar-list {
@@ -490,35 +501,6 @@ button {
   margin-top: 9px;
   color: #0d1526;
   font-size: 13px;
-}
-
-.notice-row {
-  height: 76px;
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 22px;
-  margin-top: 12px;
-  padding: 0 26px;
-  border: 1px solid var(--line);
-  border-left: 5px solid var(--gold);
-  border-radius: 4px;
-  color: #0d1526;
-  background: #fff;
-}
-
-.notice-row p {
-  margin: 0;
-  font-size: 16px;
-  line-height: 1.35;
-  font-weight: 750;
-}
-
-.notice-row > span {
-  color: var(--gold);
-  font-size: 27px;
-  line-height: 1;
-  font-weight: 850;
 }
 
 .workspace {
@@ -975,6 +957,7 @@ button {
   .portal-body {
     height: auto;
     grid-template-columns: 1fr;
+    transition: none;
   }
 
   .sidebar {
@@ -1103,13 +1086,6 @@ button {
 
   .metric:last-child {
     border-bottom: 0;
-  }
-
-  .notice-row {
-    height: auto;
-    min-height: 76px;
-    gap: 12px;
-    padding: 16px;
   }
 
   .transport-summary {
