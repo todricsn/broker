@@ -1,0 +1,49 @@
+{
+  "profile": {
+    "fullName": "Петров Сергей Александрович",
+    "balance": "845 300 ₽",
+    "saldo": "215 000 ₽",
+    "remainder": "630 300 ₽",
+    "notice": "По заявке требуется сверить транспортные документы перед подачей декларации."
+  },
+  "eptsRecords": {
+    "482915000000001": {
+      "epts": "482915000000001",
+      "lotPhoto": "assets/lot-car.jpg",
+      "title": "Toyota RAV4 2.0, 2022",
+      "brand": "Toyota RAV4",
+      "year": "2022",
+      "vin": "JTMB6RFV20J482915",
+      "body": "JTMB6RFV20J482915",
+      "color": "Белый",
+      "type": "Легковой автомобиль",
+      "engineVolume": "1987 см³",
+      "power": "149 л.с.",
+      "country": "Япония",
+      "loadMass": "1 615 кг",
+      "maxMass": "2 185 кг",
+      "eco": "Евро-5",
+      "engineType": "Бензиновый",
+      "drive": "Полный",
+      "gearbox": "Вариатор",
+      "status": "В обработке",
+      "statusDate": "04.04.2026"
+    }
+  },
+  "trackingCodes": {
+    "MS-482915": {
+      "transportName": "Автовоз Москва — Санкт-Петербург",
+      "photo": "assets/tracking-truck.jpg",
+      "statuses": [
+        {
+          "date": "02.04.2026",
+          "text": "Транспорт принят перевозчиком."
+        },
+        {
+          "date": "04.04.2026",
+          "text": "Подана декларация"
+        }
+      ]
+    }
+  }
+}

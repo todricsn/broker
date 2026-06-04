@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+    <title>Таможенный брокер</title>
+  </head>
+  <body class="broker-root">
+    <main id="app" class="broker-frame login-page">
+      <aside id="loginPage" class="login-rail">
+        <div class="login-center">
+          <img
+            class="login-emblem"
+            src="assets/customs-emblem-cut.png"
+            alt="Таможенный герб РФ"
+          />
+          <h1>ТАМОЖЕННЫЙ БРОКЕР</h1>
+          <p class="login-subtitle">ЛИЧНЫЙ КАБИНЕТ</p>
+
+          <form id="loginForm" class="login-form">
+            <label for="accessCode">Введите код доступа</label>
+            <div class="login-input-wrap">
+              <input
+                id="accessCode"
+                inputmode="numeric"
+                autocomplete="off"
+                placeholder="Код доступа"
+              />
+              <svg class="inline-icon" width="18" height="18" aria-hidden="true">
+                <path d="M3 3h5v5H3zM10 3h5v5h-5zM3 10h5v5H3zM10 10h5v5h-5z" />
+              </svg>
+            </div>
+            <button id="loginButton" type="submit">Войти</button>
+            <span id="loginError" class="login-error" aria-live="polite"></span>
+          </form>
+        </div>
+
+        <address class="login-address">
+          <div>
+            <svg class="inline-icon" width="35" height="35" aria-hidden="true">
+              <path d="M18 31s10-9 10-18a10 10 0 0 0-20 0c0 9 10 18 10 18Z" />
+              <path d="M18 17a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" />
+            </svg>
+            <span>
+              125047, Россия, г. Москва,<br />
+              ул. Лесная, д. 7, этаж 6
+            </span>
+          </div>
+          <div>
+            <svg class="inline-icon" width="34" height="34" aria-hidden="true">
+              <circle cx="17" cy="17" r="13" />
+              <path d="M4 17h26M17 4a21 21 0 0 1 0 26M17 4a21 21 0 0 0 0 26" />
+            </svg>
+            <span>
+              Геолокация<br />
+              55.7812, 37.5870
+            </span>
+          </div>
+        </address>
+      </aside>
+
+      <section id="cabinetPage" class="portal hidden">
+        <header class="portal-header">
+          <div class="header-left">
+            <button
+              id="menuButton"
+              class="menu-button"
+              type="button"
+              aria-label="Открыть навигацию"
+              aria-controls="cabinetSidebar"
+              aria-expanded="false"
+            >
+              <svg class="inline-icon" width="28" height="28" aria-hidden="true">
+                <path d="M4 7h20M4 14h20M4 21h20" />
+              </svg>
+            </button>
+            <img src="assets/customs-emblem-cut.png" alt="" />
+            <div>
+              <strong>ТАМОЖЕННЫЙ БРОКЕР</strong>
+              <span>ЛИЧНЫЙ КАБИНЕТ</span>
+            </div>
+          </div>
+          <div class="header-right">
+            <span>Код доступа: <b id="activeAccessCode"></b></span>
+            <button id="headerLogout" type="button" aria-label="Выйти из кабинета">
+              <svg class="inline-icon" width="24" height="24" aria-hidden="true">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <path d="M10 17l5-5-5-5M15 12H3" />
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <div class="portal-body">
+          <nav id="cabinetSidebar" class="sidebar" aria-label="Навигация кабинета">
+            <div class="sidebar-list">
+              <button class="active" type="button" data-nav="home" aria-current="page">
+                <svg class="inline-icon" width="22" height="22" aria-hidden="true">
+                  <path d="m3 10 8-7 8 7v9a2 2 0 0 1-2 2h-4v-6H9v6H5a2 2 0 0 1-2-2z" />
+                </svg>
+                <span>Главная</span>
+              </button>
+              <button type="button" data-nav="epts">
+                <svg class="inline-icon" width="22" height="22" aria-hidden="true">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z" />
+                  <path d="m9 12 2 2 4-5" />
+                </svg>
+                <span>ЭПТС</span>
+              </button>
+              <button type="button" data-nav="tracking">
+                <svg class="inline-icon" width="22" height="22" aria-hidden="true">
+                  <path d="M3 7h11v9H3zM14 10h3l3 3v3h-6z" />
+                  <circle cx="7" cy="18" r="2" />
+                  <circle cx="17" cy="18" r="2" />
+                </svg>
+                <span>Трекинг</span>
+              </button>
+            </div>
+
+            <button id="sidebarLogout" class="sidebar-exit" type="button">
+              <svg class="inline-icon" width="22" height="22" aria-hidden="true">
+                <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                <path d="M10 17l5-5-5-5M15 12H3" />
+              </svg>
+              <span>Выход</span>
+            </button>
+          </nav>
+
+          <section class="dashboard" id="dashboardStart">
+            <section class="profile-card">
+              <div class="profile-person">
+                <svg class="inline-icon" width="44" height="44" aria-hidden="true">
+                  <circle cx="22" cy="15" r="7" />
+                  <path d="M7 39c3-8 8-12 15-12s12 4 15 12" />
+                </svg>
+                <div>
+                  <span class="profile-label">ФИО</span>
+                  <h2 id="profileFullName"></h2>
+                </div>
+              </div>
+              <div class="metric">
+                <span>Баланс счета:</span>
+                <strong id="profileBalance"></strong>
+              </div>
+              <div class="metric">
+                <span>Сальдо:</span>
+                <strong id="profileSaldo"></strong>
+              </div>
+              <div class="metric">
+                <span>Остаток:</span>
+                <strong id="profileRemainder"></strong>
+              </div>
+            </section>
+
+            <section class="notice-row" aria-label="Информационный текст">
+              <span aria-hidden="true">|</span>
+              <p id="profileNotice"></p>
+              <span aria-hidden="true">|</span>
+            </section>
+
+            <div class="workspace">
+              <section class="epts-card card" id="eptsPanel">
+                <p class="section-label">Колонка проверить</p>
+                <h2>ЭПТС</h2>
+                <form id="eptsForm">
+                  <input
+                    id="eptsCode"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="Введите номер ЭПТС"
+                  />
+                  <button type="submit">Проверить ЭПТС</button>
+                </form>
+                <p id="eptsError" class="panel-error" aria-live="polite"></p>
+              </section>
+
+              <section class="tracking-card card" id="trackingPanel">
+                <header>
+                  <h2>Трекинг транспорта по коду</h2>
+                </header>
+
+                <form id="trackingForm" class="tracking-code-row">
+                  <label for="trackingCode">Код:</label>
+                  <input
+                    id="trackingCode"
+                    autocomplete="off"
+                    placeholder="Введите код транспорта"
+                  />
+                  <button type="submit" aria-label="Проверить код трекинга">
+                    <svg class="inline-icon" width="18" height="18" aria-hidden="true">
+                      <circle cx="8" cy="8" r="5" />
+                      <path d="m12 12 4 4" />
+                    </svg>
+                  </button>
+                </form>
+                <p id="trackingError" class="panel-error" aria-live="polite"></p>
+                <div id="trackingOutput" class="tracking-empty">
+                  Введите код транспорта и нажмите проверку.
+                </div>
+              </section>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <section id="productModal" class="product-modal hidden" aria-label="Данные о товаре">
+      <header>
+        <h2>Данные о товаре</h2>
+        <button class="modal-close" type="button" aria-label="Закрыть окно">
+          <svg class="inline-icon" width="18" height="18" aria-hidden="true">
+            <path d="M4 4l10 10M14 4 4 14" />
+          </svg>
+        </button>
+      </header>
+
+      <div id="modalGrid" class="modal-grid"></div>
+
+      <footer>
+        <span>
+          Статус: <mark id="modalStatus" class="status"></mark>
+        </span>
+        <span>Дата статуса:</span>
+        <strong id="modalStatusDate"></strong>
+        <button class="modal-close" type="button">Закрыть</button>
+      </footer>
+    </section>
+
+    <script src="assets/js/app.js" defer></script>
+  </body>
+</html>
