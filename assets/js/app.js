@@ -355,7 +355,6 @@ function navigateTo(section) {
   }
 
   setActiveNav(section)
-  closeSidebar()
 
   window.setTimeout(() => {
     document.getElementById(target.targetId)?.scrollIntoView({

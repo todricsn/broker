@@ -223,7 +223,7 @@ button {
   bottom: 0;
   height: 114px;
   display: grid;
-  grid-template-columns: 1.42fr 0.88fr;
+  grid-template-columns: 1fr auto;
   align-items: center;
   gap: 18px;
   padding: 0 38px;
@@ -239,6 +239,10 @@ button {
   color: #fff;
   font-size: 16px;
   line-height: 1.35;
+}
+
+.login-address div:last-child {
+  justify-self: end;
 }
 
 .login-address svg {
@@ -419,7 +423,7 @@ button {
 .sidebar-exit {
   position: absolute;
   left: 0;
-  bottom: 311px;
+  bottom: 0;
 }
 
 .dashboard {
@@ -1052,6 +1056,10 @@ button {
     grid-template-columns: 1fr;
     gap: 16px;
     padding: 18px 24px;
+  }
+
+  .login-address div:last-child {
+    justify-self: start;
   }
 
   .portal-header {
