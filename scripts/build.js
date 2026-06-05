@@ -17,6 +17,7 @@ for (const item of [
   'index.html',
   'epts.html',
   'tracking.html',
+  'README.md',
   'favicon.png',
   'access.json',
   'assets',
