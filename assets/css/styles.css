@@ -431,7 +431,9 @@ button {
   min-width: 0;
   padding: 12px 22px 28px;
   overflow: auto;
-  background: #f9fafc;
+  background:
+    linear-gradient(90deg, rgba(247, 249, 252, 0.38), rgba(247, 249, 252, 0.24) 54%, rgba(247, 249, 252, 0.08)),
+    url('../cabinet-bg.png') left center / cover no-repeat;
   scroll-behavior: smooth;
 }
 
@@ -441,8 +443,9 @@ button {
   grid-template-columns: minmax(260px, 300px) repeat(3, minmax(170px, 1fr));
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 1px 2px rgba(13, 21, 38, 0.04);
+  backdrop-filter: blur(2px);
 }
 
 .profile-person {
@@ -514,11 +517,21 @@ button {
   margin-top: 12px;
 }
 
+.broker-root[data-page='tracking'] .workspace {
+  grid-template-columns: minmax(0, 760px);
+}
+
+.broker-root[data-page='epts'] #trackingPanel,
+.broker-root[data-page='tracking'] #eptsPanel {
+  display: none;
+}
+
 .card {
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.94);
   box-shadow: 0 1px 2px rgba(13, 21, 38, 0.03);
+  backdrop-filter: blur(2px);
 }
 
 .card h2 {
@@ -767,8 +780,9 @@ button {
   border: 1px solid #9ba7b5;
   border-radius: 4px;
   color: #0d1526;
-  background: #fff;
+  background: rgba(255, 255, 255, 0.96);
   box-shadow: 0 12px 26px rgba(13, 21, 38, 0.16);
+  backdrop-filter: blur(2px);
 }
 
 .product-modal > header {
@@ -1109,5 +1123,43 @@ button {
   .tracking-statuses li {
     grid-template-columns: 1fr;
     gap: 6px;
+  }
+}
+
+.broker-root[data-page='epts'] .workspace {
+  grid-template-columns: minmax(340px, 520px) minmax(560px, 1fr);
+  align-items: start;
+}
+
+.broker-root[data-page='epts'] .product-modal {
+  position: static;
+  z-index: auto;
+  width: auto;
+  height: auto;
+  min-height: 315px;
+  box-shadow: 0 1px 2px rgba(13, 21, 38, 0.03);
+}
+
+.broker-root[data-page='epts'] .modal-grid {
+  grid-template-columns: 235px minmax(0, 1fr) minmax(0, 1fr);
+  padding-bottom: 0;
+}
+
+.broker-root[data-page='epts'] .product-modal footer {
+  position: static;
+  grid-template-columns: auto 105px minmax(0, 1fr) 94px;
+  height: auto;
+  min-height: 42px;
+  margin-top: 12px;
+  padding: 10px 15px;
+}
+
+@media (max-width: 1180px) {
+  .broker-root[data-page='epts'] .workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .broker-root[data-page='epts'] .modal-grid {
+    grid-template-columns: 1fr;
   }
 }

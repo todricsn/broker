@@ -13,7 +13,15 @@ await mkdir(distDir, {
   recursive: true,
 })
 
-for (const item of ['index.html', 'favicon.svg', 'access.json', 'assets', 'clients']) {
+for (const item of [
+  'index.html',
+  'epts.html',
+  'tracking.html',
+  'favicon.png',
+  'access.json',
+  'assets',
+  'clients',
+]) {
   await cp(path.join(rootDir, item), path.join(distDir, item), {
     recursive: true,
   })

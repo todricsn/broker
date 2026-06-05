@@ -12,6 +12,15 @@ const navTargets = {
   },
 }
 
+const pageRoutes = {
+  home: 'index.html',
+  epts: 'epts.html',
+  tracking: 'tracking.html',
+}
+
+const currentPage = document.body.dataset.page || 'home'
+const accessCodeStorageKey = 'brokerAccessCode'
+
 const trackingLetterMap = {
   А: 'A',
   В: 'B',
@@ -44,6 +53,7 @@ const els = {
   activeAccessCode: document.getElementById('activeAccessCode'),
   menuButton: document.getElementById('menuButton'),
   portalBody: document.querySelector('.portal-body'),
+  workspace: document.querySelector('.workspace'),
   sidebar: document.getElementById('cabinetSidebar'),
   headerLogout: document.getElementById('headerLogout'),
   sidebarLogout: document.getElementById('sidebarLogout'),
@@ -90,6 +100,8 @@ document.addEventListener('keydown', (event) => {
     closeProductModal()
   }
 })
+setupPageLayout()
+restoreSavedSession()
 
 async function handleLogin(event) {
   event.preventDefault()
@@ -109,6 +121,7 @@ async function handleLogin(event) {
     state.accessCode = accessCode
     state.client = client
     state.activeTrackingCode = ''
+    saveAccessCode(accessCode)
     renderCabinet()
   } catch (error) {
     showLoginError(
@@ -144,6 +157,30 @@ async function fetchJson(path) {
   return response.json()
 }
 
+async function restoreSavedSession() {
+  const accessCode = readSavedAccessCode()
+
+  if (!accessCode) {
+    return
+  }
+
+  setLoginLoading(true)
+
+  try {
+    const client = await loadClient(accessCode)
+
+    state.accessCode = accessCode
+    state.client = client
+    state.activeTrackingCode = ''
+    renderCabinet()
+  } catch (error) {
+    clearSavedAccessCode()
+    showLoginError('Сессия устарела. Введите код доступа еще раз.')
+  } finally {
+    setLoginLoading(false)
+  }
+}
+
 function renderCabinet() {
   const profile = state.client.profile
 
@@ -158,7 +195,7 @@ function renderCabinet() {
   els.trackingCode.value = ''
   els.trackingError.textContent = ''
   renderTrackingEmpty()
-  setActiveNav('home')
+  setActiveNav(currentPage)
   if (window.matchMedia('(max-width: 820px)').matches) {
     closeSidebar()
   } else {
@@ -171,10 +208,17 @@ function renderCabinet() {
   els.cabinetPage.classList.remove('hidden')
 }
 
+function setupPageLayout() {
+  if (currentPage === 'epts') {
+    els.workspace.append(els.productModal)
+  }
+}
+
 function logout() {
   state.accessCode = ''
   state.client = null
   state.activeTrackingCode = ''
+  clearSavedAccessCode()
 
   els.accessCode.value = ''
   els.loginError.textContent = ''
@@ -349,8 +393,14 @@ function bindImageFallbacks(container) {
 
 function navigateTo(section) {
   const target = navTargets[section]
+  const route = pageRoutes[section]
 
-  if (!target) {
+  if (!target || !route) {
+    return
+  }
+
+  if (section !== currentPage) {
+    window.location.href = route
     return
   }
 
@@ -438,6 +488,30 @@ function setLoginLoading(isLoading) {
 
 function showLoginError(text) {
   els.loginError.textContent = text
+}
+
+function saveAccessCode(accessCode) {
+  try {
+    sessionStorage.setItem(accessCodeStorageKey, accessCode)
+  } catch (error) {
+    // Кабинет продолжит работать до перезагрузки страницы.
+  }
+}
+
+function readSavedAccessCode() {
+  try {
+    return sessionStorage.getItem(accessCodeStorageKey)
+  } catch (error) {
+    return ''
+  }
+}
+
+function clearSavedAccessCode() {
+  try {
+    sessionStorage.removeItem(accessCodeStorageKey)
+  } catch (error) {
+    // Нечего чистить, если браузер запретил sessionStorage.
+  }
 }
 
 function escapeHtml(value) {
