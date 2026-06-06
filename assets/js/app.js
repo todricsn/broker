@@ -20,6 +20,7 @@ const pageRoutes = {
 
 const currentPage = document.body.dataset.page || 'home'
 const accessCodeStorageKey = 'brokerAccessCode'
+const timerStoragePrefix = 'brokerTimerDeadline'
 
 const trackingLetterMap = {
   А: 'A',
@@ -40,6 +41,9 @@ const state = {
   accessCode: '',
   client: null,
   activeTrackingCode: '',
+  timerIntervalId: null,
+  timerStorageKey: '',
+  timerDeadline: 0,
 }
 
 const els = {
@@ -58,6 +62,12 @@ const els = {
   headerLogout: document.getElementById('headerLogout'),
   sidebarLogout: document.getElementById('sidebarLogout'),
   profileFullName: document.getElementById('profileFullName'),
+  cabinetTimer: document.getElementById('cabinetTimer'),
+  timerLabel: document.getElementById('timerLabel'),
+  timerDays: document.getElementById('timerDays'),
+  timerHours: document.getElementById('timerHours'),
+  timerMinutes: document.getElementById('timerMinutes'),
+  timerSeconds: document.getElementById('timerSeconds'),
   profileBalance: document.getElementById('profileBalance'),
   profileSaldo: document.getElementById('profileSaldo'),
   profileRemainder: document.getElementById('profileRemainder'),
@@ -189,6 +199,7 @@ function renderCabinet() {
   els.profileBalance.textContent = profile.balance
   els.profileSaldo.textContent = profile.saldo
   els.profileRemainder.textContent = profile.remainder
+  startCabinetTimer(state.client.timer)
 
   els.eptsCode.value = ''
   els.eptsError.textContent = ''
@@ -218,6 +229,7 @@ function logout() {
   state.accessCode = ''
   state.client = null
   state.activeTrackingCode = ''
+  stopCabinetTimer({ clearStorage: true })
   clearSavedAccessCode()
 
   els.accessCode.value = ''
@@ -339,6 +351,106 @@ function openProductModal(record) {
 
 function closeProductModal() {
   els.productModal.classList.add('hidden')
+}
+
+function startCabinetTimer(timerConfig) {
+  stopCabinetTimer()
+
+  const timer = normalizeTimerConfig(timerConfig)
+
+  if (!timer) {
+    els.cabinetTimer.hidden = true
+    setTimerDisplay(0)
+    return
+  }
+
+  const storageKey = `${timerStoragePrefix}:${state.accessCode}:${timer.signature}`
+  const savedDeadline = readTimerDeadline(storageKey)
+  const deadline = savedDeadline ?? Date.now() + timer.totalSeconds * 1000
+
+  state.timerStorageKey = storageKey
+  state.timerDeadline = deadline
+  els.timerLabel.textContent = timer.label
+  els.cabinetTimer.hidden = false
+  saveTimerDeadline(storageKey, deadline)
+  updateCabinetTimer()
+
+  if (timer.totalSeconds > 0 && deadline > Date.now()) {
+    state.timerIntervalId = window.setInterval(updateCabinetTimer, 1000)
+  }
+}
+
+function stopCabinetTimer(options = {}) {
+  if (state.timerIntervalId) {
+    window.clearInterval(state.timerIntervalId)
+  }
+
+  if (options.clearStorage && state.timerStorageKey) {
+    clearTimerDeadline(state.timerStorageKey)
+  }
+
+  state.timerIntervalId = null
+  state.timerStorageKey = ''
+  state.timerDeadline = 0
+}
+
+function updateCabinetTimer() {
+  const remainingSeconds = Math.max(
+    0,
+    Math.ceil((state.timerDeadline - Date.now()) / 1000),
+  )
+
+  setTimerDisplay(remainingSeconds)
+
+  if (remainingSeconds === 0 && state.timerIntervalId) {
+    window.clearInterval(state.timerIntervalId)
+    state.timerIntervalId = null
+  }
+}
+
+function setTimerDisplay(totalSeconds) {
+  const days = Math.floor(totalSeconds / 86400)
+  const hours = Math.floor((totalSeconds % 86400) / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  els.timerDays.textContent = formatTimerPart(days)
+  els.timerHours.textContent = formatTimerPart(hours)
+  els.timerMinutes.textContent = formatTimerPart(minutes)
+  els.timerSeconds.textContent = formatTimerPart(seconds)
+  els.cabinetTimer.classList.toggle('expired', totalSeconds === 0)
+}
+
+function normalizeTimerConfig(timerConfig) {
+  if (!timerConfig || typeof timerConfig !== 'object' || timerConfig.enabled === false) {
+    return null
+  }
+
+  const days = readTimerPart(timerConfig.days)
+  const hours = readTimerPart(timerConfig.hours)
+  const minutes = readTimerPart(timerConfig.minutes)
+  const seconds = readTimerPart(timerConfig.seconds)
+  const totalSeconds = days * 86400 + hours * 3600 + minutes * 60 + seconds
+
+  return {
+    label: typeof timerConfig.label === 'string' ? timerConfig.label : 'Осталось времени:',
+    signature: [days, hours, minutes, seconds].join('-'),
+    totalSeconds,
+  }
+}
+
+function readTimerPart(value) {
+  const number = Number.parseInt(value, 10)
+
+  if (!Number.isFinite(number) || number < 0) {
+    return 0
+  }
+
+  return number
+}
+
+function formatTimerPart(value) {
+  return String(value).padStart(2, '0')
 }
 
 function renderInfoColumn(title, rows) {
@@ -509,6 +621,31 @@ function readSavedAccessCode() {
 function clearSavedAccessCode() {
   try {
     sessionStorage.removeItem(accessCodeStorageKey)
+  } catch (error) {
+    // Нечего чистить, если браузер запретил sessionStorage.
+  }
+}
+
+function readTimerDeadline(storageKey) {
+  try {
+    const value = Number(sessionStorage.getItem(storageKey))
+    return Number.isFinite(value) && value > 0 ? value : null
+  } catch (error) {
+    return null
+  }
+}
+
+function saveTimerDeadline(storageKey, deadline) {
+  try {
+    sessionStorage.setItem(storageKey, String(deadline))
+  } catch (error) {
+    // Таймер продолжит работать до перезагрузки страницы.
+  }
+}
+
+function clearTimerDeadline(storageKey) {
+  try {
+    sessionStorage.removeItem(storageKey)
   } catch (error) {
     // Нечего чистить, если браузер запретил sessionStorage.
   }

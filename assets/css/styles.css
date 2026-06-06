@@ -440,7 +440,7 @@ button {
 .profile-card {
   height: 110px;
   display: grid;
-  grid-template-columns: minmax(260px, 300px) repeat(3, minmax(170px, 1fr));
+  grid-template-columns: minmax(240px, 285px) minmax(220px, 250px) repeat(3, minmax(145px, 1fr));
   border: 1px solid var(--line);
   border-radius: 4px;
   background: rgba(255, 255, 255, 0.94);
@@ -502,6 +502,56 @@ button {
   font-size: 23px;
   line-height: 1;
   font-weight: 850;
+}
+
+.countdown-metric {
+  padding: 0 12px;
+}
+
+.countdown-metric > span {
+  color: #6d5b20;
+  font-size: 12px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.timer-value {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 7px;
+  margin-top: 12px;
+  color: #0d3b66;
+}
+
+.timer-value span {
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  padding: 7px 4px;
+  border: 1px solid #d7dfeb;
+  border-radius: 4px;
+  background: rgba(247, 250, 253, 0.9);
+}
+
+.timer-value b {
+  color: #003861;
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 850;
+}
+
+.timer-value small {
+  color: #5b6677;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 750;
+  text-transform: uppercase;
+}
+
+.countdown-metric.expired .timer-value b {
+  color: #b40c17;
 }
 
 .metric small {
@@ -935,8 +985,7 @@ button {
     border-bottom: 1px solid var(--line);
   }
 
-  .metric:nth-child(3),
-  .metric:nth-child(4) {
+  .metric:last-child {
     border-bottom: 0;
   }
 

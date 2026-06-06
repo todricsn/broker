@@ -29,6 +29,14 @@ function requireString(source, key, filePath) {
   }
 }
 
+function requireNonNegativeNumber(source, key, filePath, label = key) {
+  const value = source?.[key]
+
+  if (!Number.isInteger(value) || value < 0) {
+    errors.push(`${relative(filePath)}: поле "${label}" должно быть целым числом 0 или больше`)
+  }
+}
+
 function checkAsset(assetPath, filePath, label, allowEmpty = false) {
   if (!assetPath && allowEmpty) {
     return
@@ -60,6 +68,29 @@ function validateProfile(client, filePath) {
 
   for (const key of ['fullName', 'balance', 'saldo', 'remainder', 'notice']) {
     requireString(client.profile, key, filePath)
+  }
+}
+
+function validateTimer(client, filePath) {
+  if (client.timer === undefined) {
+    return
+  }
+
+  if (!isObject(client.timer)) {
+    errors.push(`${relative(filePath)}: блок "timer" должен быть объектом`)
+    return
+  }
+
+  if (client.timer.enabled !== undefined && typeof client.timer.enabled !== 'boolean') {
+    errors.push(`${relative(filePath)}: поле "timer.enabled" должно быть true или false`)
+  }
+
+  if (client.timer.label !== undefined && typeof client.timer.label !== 'string') {
+    errors.push(`${relative(filePath)}: поле "timer.label" должно быть строкой`)
+  }
+
+  for (const key of ['days', 'hours', 'minutes', 'seconds']) {
+    requireNonNegativeNumber(client.timer, key, filePath, `timer.${key}`)
   }
 }
 
@@ -171,6 +202,7 @@ if (isObject(accessMap)) {
     }
 
     validateProfile(client, clientPath)
+    validateTimer(client, clientPath)
     validateEptsRecords(client, clientPath)
     validateTrackingCodes(client, clientPath)
   }
