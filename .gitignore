@@ -1,3 +1,6 @@
 .DS_Store
 dist/
+dist-without-timer/
 html-broker-dist.zip
+broker-with-timer.zip
+broker-without-timer.zip

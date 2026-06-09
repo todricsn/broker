@@ -7,6 +7,6 @@
     "dev": "node scripts/serve.js",
     "validate:data": "node scripts/validate-data.js",
     "build": "npm run validate:data && node scripts/build.js",
-    "release": "npm run build && cd dist && zip -qr ../html-broker-dist.zip ."
+    "release": "npm run build && rm -f broker-with-timer.zip broker-without-timer.zip && cd dist && zip -qr ../broker-with-timer.zip . && cd ../dist-without-timer && zip -qr ../broker-without-timer.zip ."
   }
 }

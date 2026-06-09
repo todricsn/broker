@@ -12,13 +12,26 @@ const navTargets = {
   },
 }
 
-const pageRoutes = {
-  home: 'index.html',
-  epts: 'epts.html',
-  tracking: 'tracking.html',
-}
-
 const currentPage = document.body.dataset.page || 'home'
+const usesCleanUrls = !window.location.pathname.endsWith('.html')
+const siteRoot = usesCleanUrls && currentPage !== 'home' ? '../' : './'
+const pageRoutes = usesCleanUrls
+  ? currentPage === 'home'
+    ? {
+        home: './',
+        epts: 'epts/',
+        tracking: 'tracking/',
+      }
+    : {
+        home: '../',
+        epts: '../epts/',
+        tracking: '../tracking/',
+      }
+  : {
+      home: 'index.html',
+      epts: 'epts.html',
+      tracking: 'tracking.html',
+    }
 const accessCodeStorageKey = 'brokerAccessCode'
 const timerStoragePrefix = 'brokerTimerDeadline'
 
@@ -156,7 +169,7 @@ async function loadClient(accessCode) {
 }
 
 async function fetchJson(path) {
-  const response = await fetch(path, {
+  const response = await fetch(resolveSitePath(path), {
     cache: 'no-store',
   })
 
@@ -356,6 +369,10 @@ function closeProductModal() {
 function startCabinetTimer(timerConfig) {
   stopCabinetTimer()
 
+  if (!els.cabinetTimer) {
+    return
+  }
+
   const timer = normalizeTimerConfig(timerConfig)
 
   if (!timer) {
@@ -480,7 +497,7 @@ function renderImageOrError(src, alt, className, text) {
 
   return `
     <img
-      src="${escapeAttribute(src)}"
+      src="${escapeAttribute(resolveSitePath(src))}"
       alt="${escapeAttribute(alt)}"
       data-error-class="${escapeAttribute(className)}"
       data-error-text="${escapeAttribute(text)}"
@@ -649,6 +666,10 @@ function clearTimerDeadline(storageKey) {
   } catch (error) {
     // Нечего чистить, если браузер запретил sessionStorage.
   }
+}
+
+function resolveSitePath(filePath) {
+  return `${siteRoot}${String(filePath).replace(/^\.?\//, '')}`
 }
 
 function escapeHtml(value) {
