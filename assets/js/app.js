@@ -75,6 +75,8 @@ const els = {
   headerLogout: document.getElementById('headerLogout'),
   sidebarLogout: document.getElementById('sidebarLogout'),
   profileFullName: document.getElementById('profileFullName'),
+  profileNotice: document.getElementById('profileNotice'),
+  profileNoticeText: document.getElementById('profileNoticeText'),
   cabinetTimer: document.getElementById('cabinetTimer'),
   timerLabel: document.getElementById('timerLabel'),
   timerDays: document.getElementById('timerDays'),
@@ -212,6 +214,7 @@ function renderCabinet() {
   els.profileBalance.textContent = profile.balance
   els.profileSaldo.textContent = profile.saldo
   els.profileRemainder.textContent = profile.remainder
+  renderProfileNotice(profile.notice)
   startCabinetTimer(state.client.timer)
 
   els.eptsCode.value = ''
@@ -236,6 +239,13 @@ function setupPageLayout() {
   if (currentPage === 'epts') {
     els.workspace.append(els.productModal)
   }
+}
+
+function renderProfileNotice(notice) {
+  const text = typeof notice === 'string' ? notice.trim() : ''
+
+  els.profileNoticeText.textContent = text
+  els.profileNotice.hidden = !text
 }
 
 function logout() {
